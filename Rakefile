@@ -15,7 +15,7 @@ end
 
 desc "Run Hugo server to test"
 task :s do 
-  system "hugo server -D"
+  system "hugo server --minify --theme book"
 end
 
 desc "Make dev env ready"
