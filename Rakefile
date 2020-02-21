@@ -18,6 +18,13 @@ task :s do
   system "hugo server -D"
 end
 
+desc "Make dev env ready"
+task :ready do
+  system "bundle install"
+  system "git submodule update --init"
+  system "cp -R themes/book/exampleSite/content ."
+end
+
 desc "Generate and publish book to my Repo"
 task :publish => [:gen] do
   Dir.mktmpdir do |tmp|
