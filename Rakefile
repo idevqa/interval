@@ -22,7 +22,6 @@ desc "Make dev env ready"
 task :ready do
   system "bundle install"
   system "git submodule update --init"
-  system "cp -R themes/book/exampleSite/content ."
 end
 
 desc "Generate and publish book to my Repo"
