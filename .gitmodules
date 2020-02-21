@@ -1,6 +1,6 @@
 [submodule "themes/book"]
 	path = themes/book
-	url = git@github.com:Desgard/hugo-book-gua.git
+	url = git@github.com:idevqa/hugo-book-theme.git
 [submodule "content"]
 	path = content
 	url = git@github.com:idevqa/interval-content.git
