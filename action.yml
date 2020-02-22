@@ -1,5 +1,5 @@
 
-jobs:
+runs:
   steps:
     - uses: idevqa/interval@master
     - name: Ready for Repo
