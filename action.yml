@@ -1,6 +1,0 @@
-name: 'Publish interval'
-description: 'Use Hugo to publish Page'
-author: 'Desgard_Duan <gua@desgard.com>'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
