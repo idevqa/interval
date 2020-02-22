@@ -13,6 +13,13 @@ task :gen do
   system "hugo"
 end
 
+desc "Update content"
+task :u do
+  Dir.chdir("./content") do
+    system "git pull origin master"
+  end 
+end
+
 desc "Run Hugo server to test"
 task :s do 
   system "hugo server --minify --theme book"
@@ -20,12 +27,18 @@ end
 
 desc "Make dev env ready"
 task :ready do
+  sys = ENV['sys']
+  if sys == "ubuntu"
+    system "sudo apt-get install hugo"
+  elsif sys == "macos"
+    system "brew install hugo"
+  end
   system "bundle install"
   system "git submodule update --init"
 end
 
 desc "Generate and publish book to my Repo"
-task :publish => [:gen] do
+task :publish => [:u, :gen] do
   Dir.mktmpdir do |tmp|
     cp_r DEST, tmp
     pwd = Dir.pwd
