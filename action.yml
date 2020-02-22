@@ -2,4 +2,4 @@ name: 'Build and Publish'
 description: '😤'
 runs:
   using: 'node12'
-  main: 'workflow.js
+  main: 'index.js
