@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: idevqa/interval@master
     - name: Ready for Repo
       run: | 
         echo 'Ready for Hugo env'
