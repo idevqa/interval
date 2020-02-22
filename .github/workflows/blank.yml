@@ -9,5 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Ready for Repo
-      uses: idevqa/interval@master
+      run: | 
+        rake ready sys="ubuntu"
+    - name: Publish
+      run: rake 
