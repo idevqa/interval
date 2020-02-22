@@ -10,14 +10,4 @@ jobs:
 
     steps:
     - name: Ready for Repo
-      run: | 
-        echo 'Ready for Hugo env'
-        pwd 
-        ls
-        cd interval
-        pwd
-        ls
-        rake ready sys='ubuntu'
-    - name: Publish page
-      run: |
-        rake 
+      uses: idevqa/interval@master
