@@ -1,6 +1,8 @@
 [submodule "themes/book"]
 	path = themes/book
 	url = git@github.com:idevqa/hugo-book-theme.git
+	branch = master
 [submodule "content"]
 	path = content
 	url = git@github.com:idevqa/interval-content.git
+	branch = master
