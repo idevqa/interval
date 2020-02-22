@@ -14,7 +14,8 @@ jobs:
         echo 'Ready for Hugo env'
         pwd 
         ls
-        cd ..
+        cd interval
+        pwd
         ls
         rake ready sys='ubuntu'
     - name: Publish page
