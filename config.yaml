@@ -4,6 +4,8 @@ relativeURLs: false
 languageCode: zh-CN
 theme: book
 
+enableGitInfo: true
+
 
 markup:
   goldmark:
@@ -23,5 +25,7 @@ markup:
 
 params:
   BookMenuBundle: /menu
+  BookRepo: 'https://github.com/idevqa/interval-content'
+  BookEditPath: /edit/master/
 
   WechatQRCode: https://raw.githubusercontent.com/Desgard/algo/img/img/_index/wechat-qrcode.png
