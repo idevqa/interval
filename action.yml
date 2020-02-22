@@ -1,13 +1,5 @@
 name: 'Build and Publish'
 description: '😤'
-# inputs:
-#   who-to-greet:  # 输入 id
-#     description: 'Who to greet'
-#     required: true
-#     default: 'World'
-# outputs:
-#   time: # 输出 id
-#     description: 'The time we greeted you'
 runs:
   using: 'node12'
   main: 'workflow.js
