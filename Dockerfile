@@ -1,8 +1,9 @@
 FROM python:3.7-slim
 
 
+RUN sudo apt-get install hugo
 RUN echo "hello flow"
-COPY "entrypoint.sh" "/entrypoint.sh"
-RUN chmod +x /entrypoint.sh
+RUN rake ready sys='ubuntu'
+RUN rake
 
-ENTRYPOINT ["/entrypoint.sh"]
+# ENTRYPOINT ["/entrypoint.sh"]
