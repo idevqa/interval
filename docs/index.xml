@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docs on 一瓜 iOS 面试小册</title>
+    <link>https://iosgua.com/interval/docs/</link>
+    <description>Recent content in Docs on 一瓜 iOS 面试小册</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    
+	<atom:link href="https://iosgua.com/interval/docs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://iosgua.com/interval/docs/ch01/tc01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch01/tc01/01/</guid>
+      <description>计算机网络 TCP的握手过程？为什么进行三次握手，四次挥手 了解更多
+HTTPS的握手过程  建立服务器443端口连接 SSL握手：证书，随机密钥，加密算法 发送加密请求 发送加密响应 关闭SSL 关闭TCP  什么是中间人攻击？怎么预防？  中间人把自己的公钥给到客户端，之后用自己的私钥解开客户端数据，再用后台的公钥加密数据，发给后台。这样中间人能拿到双端的数据。 一般禁止接入代理和在代码内比对证书。  charles抓包过程？不使用charles，4G网络如何抓包  运行charles，手机配置代理。如果是http协议，charles能看到所有的请求和返回数据。如果要看到https的数据，需要在手机上安装charles证书，并信任证书。 4G网络，如果是安卓设备，用Packet Capture、tshark或者tcpdump。如果是iOS设备，用Fiddler、tcpdump和wireshark。  TCP和UDP的区别   TCP是IP网络上面向连接的流， 保证所有发送的包能够按照正确的顺序到达目的地。这意味着发送端要接受ACK包，包自动重传，相对于UDP来说会引起额外延迟以及传输效率更低。TCP还有拥塞控制，流量控制，错误校验等其他机制。
+  UDP是无连接传输协议，面向数据报传输，只保证单个数据报的正确性。数据报到达目的地，有可能会乱序，丢包，或者根本到达不了。由于它没有ACK，所以它比TCP传输效率更高。一般用在实时通讯，相对于TCP连接的开销，虽然存在较小丢包率，但更加适合。
+  在某些场合下,UDP用来广播包传输。这在例如DHCP协议有时候是最基本的，因为客户端并没有接收到IP地址(DHCP 协商协议目的)，这时候是没有办法在没有IP地址的情况下建立起TCP连接的。
+  TCP拥塞控制  慢启动、当 CongWin低于Threshold, 发送端在慢启动阶段，窗口指数增长。 加性增、当 CongWin高于Threshold, 发送端在拥塞避免阶段，窗口线性增长。 乘性减、当接收到三个重复的ACK，Threshold设置为CongWin/2，CongWin设置为Threshold。 重置、当超时发生的时候，Threshold设置为CongWin/2，CongWin设置为1MSS，重新跑1-3流程  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://iosgua.com/interval/docs/ch01/tc02/02/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch01/tc02/02/</guid>
+      <description>操作系统 进程和线程的区别  根本区别：进程是操作系统资源分配的基本单位，线程是任务调度和执行的基本单位； 在开销方面：每个进程都有独立的代码和数据空间，程序之间的切换会有较大的开销；线程可以看做轻量级的进程，同一类线程共享代码和数据空间，每个线程都有自己独立的运行栈和程序计数器，线程之间切换的开销小。 所处环境：在操作系统中能同时运行多个进程；而在同一个进程中有多个线程同时执行，通过CPU调度，在每个时间片中只有一个线程执行 内存分配方面：系统在运行的时候会为每个进程分配不同的内存空间；而对线程而言，除了CPU外，系统不会为线程分配内存，线程所使用的资源来自其所属进程的资源，线程组之间只能共享资源。 包含关系：没有线程的进程可以看做是单线程的，如果一个进程内有多个线程，则执行过程不是一条线的，而是多条线共同完成的；线程是进程的一部分，所以线程也被称为轻量级进程。  堆和栈区的区别？谁的占用内存空间大  栈内存存储的是局部变量，而堆内存是实体； 栈内存的更新速度高于堆内存； 栈内存的生命周期一结束就会被释放，而堆内存会被垃圾回收机制不定时回收。 堆是向高地址扩展的数据结构，是不连续的内存区域。这是由于系统是用链表来存储空闲内存地址的，自然是不连续的，而链表的遍历方向是由低地址向高地址。堆的大小受限于计算机系统中有效的虚拟内存。由此可见，堆获得的空间比较灵活，也比较大。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://iosgua.com/interval/docs/ch01/tc03/03/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch01/tc03/03/</guid>
+      <description>数据安全 对称加密算法和非对称加密算法区别 对称加密算法，是用的一个秘钥，进行加密和解密。而非对称加密算法，用的是一对秘钥，包括公钥和私钥，一般用公钥加密，私钥解密。
+常见的对称加密和非对称加密算法有哪些 对称加密有AES、3DES，非对称加密有RSA。
+MD5、Sha1、Sha256区别  MD5值长度是128位（16个字符）、SHA1值长度是160位（20个字符）、SHA256值长度是256位（32个字符）。 MD5，消息摘要算法，一种被广泛使用的密码散列函数，可以产生一个128位长的散列值（hash value），用于确保信息传输完整一致。 Sha1，安全哈希算法，主要适用于数字签名标准里面定义的数字签名算法。对于长度小于2^64位的消息，Sha1会产生一个160位长的消息摘要。 Sha256，哈希值表示大量数据的固定大小的唯一值。数据的少量更改会在哈希值中产生不可预知的大量更改。Sha256 算法的哈希值长度为 256 位。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://iosgua.com/interval/docs/ch01/tc04/04/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch01/tc04/04/</guid>
+      <description>苹果证书 苹果使用证书的目的是什么  苹果使用证书，来签名APP，一是防止APP被篡改，二是防止没有苹果签名的APP安装到设备上。  AppStore安装app时的认证流程 当安装时，苹果的认证流程是，
+ 苹果用设备系统的本地公钥，验证APP的MD5值的签名。  在上传时，苹果的操作流程是，
+ 苹果验证发布证书和 Provisioning Profile 苹果用后台的私钥，给包重新签名  所以，原来的本地私钥签名就没有用了。苹果没有控制包的有效期，就不需要内置 embedded.mobileprovision 。当上传到AppStore后，就跟你的 证书 / Provisioning Profile 都没有关系了。无论它们是否过期或被废除，都不会影响 AppStore 上的安装包。
+开发者怎么在debug模式下把app安装到设备呢  苹果用设备系统的本地公钥，验证 embedded.mobileprovision 的签名，验证开发证书的签名是否正确。 用开发证书的公钥验证APP签名，验证AppID是否对应得上，设备ID是否在ID列表上，权限开关是否跟APP里的Entitlements对应等。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-1/</guid>
+      <description>//block的内部实现及结构体 struct Block_literal_1 { void *isa; // initialized to &amp;amp;_NSConcreteStackBlock or &amp;amp;_NSConcreteGlobalBlock  int flags; int reserved; void (*invoke)(void *, ...); struct Block_descriptor_1 { unsigned long int reserved; // NULL  unsigned long int size; // sizeof(struct Block_literal_1)  // optional helper functions  void (*copy_helper)(void *dst, void *src); // IFF (1&amp;lt;&amp;lt;25)  void (*dispose_helper)(void *src); // IFF (1&amp;lt;&amp;lt;25)  // required ABI.2010.3.16  const char *signature; // IFF (1&amp;lt;&amp;lt;30)  } *descriptor; // imported variables }; 验证: xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc OC文件 -o CPP文件</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-2/</guid>
+      <description>block是类吗，有哪些类型 block本质是OC对象(Blocks are Objective-C objects),内部含有isa指针.
+block的类型  NSStackBlock(_NSConcreteStackBlock) 栈区 调用copy后 会将栈中的block调用到堆上 类型转变为__NSMallocBlock__  NSGlobalBlock(_NSConcreteGlobalBlock) 数据区 调用copy后 什么都不做  NSMallocBlock(_NSConcreteMallocBlock) 堆区 调用copy后 引用计数增加   //block底层结构形式 struct Block_literal_1 { void *isa; // initialized to &amp;amp;_NSConcreteStackBlock or &amp;amp;_NSConcreteGlobalBlock  int flags; int reserved; void (*invoke)(void *, ...); struct Block_descriptor_1 { unsigned long int reserved; // NULL  unsigned long int size; // sizeof(struct Block_literal_1)  // optional helper functions  void (*copy_helper)(void *dst, void *src); // IFF (1&amp;lt;&amp;lt;25)  void (*dispose_helper)(void *src); // IFF (1&amp;lt;&amp;lt;25)  // required ABI.</description>
+    </item>
+    
+    <item>
+      <title>APP 架构</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-10/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-10/</guid>
+      <description>题目还原 你的app架构是什么，有什么优缺点、为什么这么做、怎么改进  </description>
+    </item>
+    
+    <item>
+      <title>ARC</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc02/6-2-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc02/6-2-4/</guid>
+      <description>题目还原 介绍下 ARC 的实现原理。它对 retain &amp;amp; release 做了哪些优化？哪些情况会造成内存泄漏?  </description>
+    </item>
+    
+    <item>
+      <title>AutoLayout 原理与性能</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc02/4-2-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc02/4-2-1/</guid>
+      <description>题目还原 AutoLayout 原理是怎样的？其性能如何？  </description>
+    </item>
+    
+    <item>
+      <title>Autoreleasepool</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc02/6-2-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc02/6-2-3/</guid>
+      <description>题目还原 介绍下 Autoreleasepool 的原理，及其使用的数据结构  </description>
+    </item>
+    
+    <item>
+      <title>block,ARC,MRC</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-9/</guid>
+      <description>题目还原 Block访问对象类型的auto变量时，在ARC和MRC下有什么区别  </description>
+    </item>
+    
+    <item>
+      <title>block修饰词</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-6/</guid>
+      <description>题目还原 block可以用strong修饰吗  </description>
+    </item>
+    
+    <item>
+      <title>block内存管理</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-5/</guid>
+      <description>题目还原 block怎么进行内存管理的  </description>
+    </item>
+    
+    <item>
+      <title>block变量</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-3/</guid>
+      <description>题目还原 一个int变量被 __block 修饰与否的区别？block的变量截获  </description>
+    </item>
+    
+    <item>
+      <title>block变量</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-4/</guid>
+      <description>题目还原 block在修改NSMutableArray，需不需要添加__block  </description>
+    </item>
+    
+    <item>
+      <title>block的copy操作</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-8/</guid>
+      <description>题目还原 block发生copy时机  </description>
+    </item>
+    
+    <item>
+      <title>category</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-5/</guid>
+      <description>题目还原 介绍下category是什么，是如何被加载的。
+说说两个category的load方法的加载顺序，两个category的同名方法的加载顺序。
+category &amp;amp; extension的区别，是否能给NSObject添加Extension
+ </description>
+    </item>
+    
+    <item>
+      <title>class, objc_getClass, object_getclass</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc03/6-3-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc03/6-3-4/</guid>
+      <description>词条作者：@0x1306a94
+ 题目还原 class、objc_getClass、object_getclass 这几个方法的区别是什么？  Class objc_getClass(const char *aClassName)  传入C语言字符串形式类名,底层从一个NXMapTable的全局gdb_objc_realized_classes中查找对应的类对象  // 调用路径 objc_getClass ~&amp;gt; look_up_class ~&amp;gt; getClass ~&amp;gt; getClass_impl // This is a misnomer: gdb_objc_realized_classes is actually a list of // named classes not in the dyld shared cache, whether realized or not. NXMapTable *gdb_objc_realized_classes; // exported for debuggers in objc-gdb.h  static Class getClass_impl(const char *name) { runtimeLock.assertLocked(); // allocated in _read_images  assert(gdb_objc_realized_classes); // Try runtime-allocated table  Class result = (Class)NXMapGet(gdb_objc_realized_classes, name); if (result) return result; // Try table from dyld shared cache  return getPreoptimizedClass(name); } Class object_getClass(id obj)  根据传入的obj, 获取obj的isa 传入的obj可能是instance对象, class对象, meta-class对象 如果传入的是instance对象,则返回class对象 如果传入的是class对象,则返回meta-class对象 如果传入的是meta-class对象,则返回NSObject(基类)的meta-class对象  /*********************************************************************** * object_getClass.</description>
+    </item>
+    
+    <item>
+      <title>class_copyIvarList &amp; class_copyPropertyList有什么区别</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-3/</guid>
+      <description>题目还原 class_copyIvarList &amp;amp; class_copyPropertyList有什么区别  </description>
+    </item>
+    
+    <item>
+      <title>class_rw_t 和 class_ro_t 有什么区别</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-4/</guid>
+      <description>题目还原 class_rw_t 和 class_ro_t 有什么区别  </description>
+    </item>
+    
+    <item>
+      <title>dispatch_once 实现原理</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc02/5-2-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc02/5-2-4/</guid>
+      <description>题目还原 介绍下 dispatch_once 实现原理  </description>
+    </item>
+    
+    <item>
+      <title>GCD API</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc02/5-2-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc02/5-2-3/</guid>
+      <description>题目还原 列出 GCD 的一些常用 api  </description>
+    </item>
+    
+    <item>
+      <title>GCD 线程与队列关系</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc02/5-2-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc02/5-2-2/</guid>
+      <description>题目还原 说出 GCD 线程与队列关系  </description>
+    </item>
+    
+    <item>
+      <title>GCD 队列</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc02/5-2-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc02/5-2-1/</guid>
+      <description>题目还原 GCD 有哪些队列，默认提供哪些队列  </description>
+    </item>
+    
+    <item>
+      <title>git diff</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-8/</guid>
+      <description>题目还原 如何设计一个 git diff  </description>
+    </item>
+    
+    <item>
+      <title>imageName 和 imageWithContentsOfFile</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc03/4-3-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc03/4-3-3/</guid>
+      <description>题目还原 imageName 和 imageWithContentsOfFile 的作用是什么？其区别是？  </description>
+    </item>
+    
+    <item>
+      <title>IMP, SEL, Method</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-8/</guid>
+      <description>题目还原 介绍下IMP, SEL, Method的区别和使用场景  </description>
+    </item>
+    
+    <item>
+      <title>iOS 事件响应链机制</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc01/4-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc01/4-1-1/</guid>
+      <description> 词条作者：@冬瓜
+ 题目还原  什么 iOS 的事件响应链机制？ 响应链有什么作用？ 事件传递流程是怎样的？ iOS 是如何找到第一响应者的？   什么是 iOS 的事件响应链机制？ iOS 的事件响应链（Responder Chain）就是当 UI 收到某个信号的响应后这种控件间自上到下消息传递的链路。其中最重要的就是事件传递流程以及如何找到第一响应者。
+响应链的作用 可以使得一个触摸事件选择多个对象来处理，简单来说系统是通过 hitTest:withEvent: 方法找到此次触摸事件的响应视图，然后调用视图的 touchesBegan:withEvent: 方法来处理事件。
+事件传递流程 找到第一响应者 响应链的作用 扩大响应范围 复杂页面事件统一处理 </description>
+    </item>
+    
+    <item>
+      <title>iOS 的内省方法</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc03/6-3-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc03/6-3-3/</guid>
+      <description>题目还原 iOS 的内省方法有哪些？内部实现原理是什么？  </description>
+    </item>
+    
+    <item>
+      <title>KVO</title>
+      <link>https://iosgua.com/interval/docs/ch07/tc06/7-2-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch07/tc06/7-2-1/</guid>
+      <description>题目还原 实现原理? 如何手动关闭kvo? 通过KVC修改属性会触发KVO么? 哪些情况下使用kvo会崩溃，怎么防护崩溃? kvo的优缺点?  </description>
+    </item>
+    
+    <item>
+      <title>layoutsubviews 和 drawrect</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc01/4-1-5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc01/4-1-5/</guid>
+      <description>题目还原 layoutsubviews 和 drawrect 的作用是啥？其调用时机是怎样的？  </description>
+    </item>
+    
+    <item>
+      <title>load &amp; initialize</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-9/</guid>
+      <description>词条作者：@0x1306a94
+ 题目还原 load、initialize方法的区别什么？在继承关系中他们有什么区别  load  Apple 官方文档介绍
+    每个Class、Category的 +load，在程序运行过程中只调用一次(初始化Runtime时自动调用)    先调用Class的+load,按照编译先后顺序调用(先编译，先调用,调用子类的+load之前会先调用父类的+load)    再调用Category的+load, 按照编译先后顺序调用(先编译，先调用)    +load方法是根据方法地址直接调用，并不是经过objc_msgSend函数调用     接下来通过源码来验证上面结论 本文基于 objc4-756.2.tar.gz 源码分析, 具体源码文件为 objc-runtime-new.mm
+  首先当你在手机上点击一个应用时,最终会由dyld将对应应用的可执行文件载入内存,然后进行一些初始化工作,其中会调用_objc_init, 这一流程可以通过添加一个_objc_init的符号断点,当断点断下时,可以通过lldb调试器输入bt查看详细的调用栈  void _objc_init(void) { static bool initialized = false; if (initialized) return; initialized = true; // fixme defer initialization until an objc-using image is found?  environ_init(); tls_init(); static_init(); lock_init(); exception_init(); // _objc_init-&amp;gt;map_images-&amp;gt;map_images_nolock-&amp;gt;_read_images-&amp;gt;realizeClass  _dyld_objc_notify_register(&amp;amp;map_images, load_images, unmap_image); }  在_objc_init中注册dyld回调,接下来主要关注load_images回调函数, load_images函数所做的事刚好验证了上面说的第一点  void load_images(const char *path __unused, const struct mach_header *mh) { // 检查有没有load 需要调用  // 通过检查 mach-o 中 __objc_nlclslist 和 __objc_nlcatlist 段数据  if (!</description>
+    </item>
+    
+    <item>
+      <title>metaclass</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-2/</guid>
+      <description>题目还原 介绍下 metaclass 是什么，作用是什么  </description>
+    </item>
+    
+    <item>
+      <title>Method Swizzle</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc03/6-3-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc03/6-3-1/</guid>
+      <description>题目还原 介绍下 Method Swizzle 的原理与使用注意事项  </description>
+    </item>
+    
+    <item>
+      <title>MVC, MVP, MVVM</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-2/</guid>
+      <description>题目还原 介绍下 MVC, MVP, MVVM  MV(X)  Models - 存放业务数据或者处理数据相关的数据访问层。例如 ‘Person’ 或者 ‘PersonDataProvider’ 类。 Views - 存放展示层（GUI），在iOS中，前缀是UI的。 Controller/Presenter/ViewModel - 模型和视图之间的胶水或者媒介，一般来说，通过用户在视图上的事件触发改变模型，以及模型的更新反映到用户视图上。  MVC  分布 - View 和 Model 实际上是分离的，但是View和Controller却耦合太深。 可测试性 - 因为耦合性太深，你只能测试你的Model。 易用性 - 对比其他模式代码最少。 除此之外，开发者相对比较熟悉它，同时它也方便给那些经验不足的开发者维护。  MVP  分布 - 我们大部分责任都在分类 Presenter和Model，以及一个非常轻量的View。 可测试性 - 非常棒，因为视图的轻量级别，我们可以很方便的测试大部分逻辑。 易用性 - 代码量是MVC的双倍，同时，MVP的目的是非常清晰的。  MVVM  分布 - MVVM的View相对于MVP的View有着更多的责任。因为前者是通过设置绑定，从View Model中来更新状态，后者是将所有事件传递给Presenter，并不更新自身。 可测性 - View Model与View没有任何联系，这个允许我们很方便的测试。View或许也是可以测试，但是因为依赖UIKit，我们往往会跳过它。 易用性 - 代码量和我们之前的MVP模式例子大致相同，但是在实际应用中，你必须要从View传递所有事件给Presenter和手动更新View，MVVM显得更加精简，如果使用绑定的话。  参考链接 https://medium.com/ios-os-x-development/ios-architecture-patterns-ecba4c38de52#.67bu0gn15</description>
+    </item>
+    
+    <item>
+      <title>NSOperationQueue</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc03/5-3-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc03/5-3-1/</guid>
+      <description>题目还原 介绍下 NSOperationQueue, maxConcurrentOperationCount 的默认值是多少？  </description>
+    </item>
+    
+    <item>
+      <title>NSTimer, CADisplayLink, dispatch_source_t</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc03/5-3-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc03/5-3-2/</guid>
+      <description>题目还原 比较 NSTimer, CADisplayLink, dispatch_source_t 的优劣  </description>
+    </item>
+    
+    <item>
+      <title>Runloop</title>
+      <link>https://iosgua.com/interval/docs/ch07/tc01/7-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch07/tc01/7-1-1/</guid>
+      <description>题目还原 app如何接收到触摸事件的  </description>
+    </item>
+    
+    <item>
+      <title>Runloop</title>
+      <link>https://iosgua.com/interval/docs/ch07/tc02/7-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch07/tc02/7-1-2/</guid>
+      <description>题目还原 为什么只有主线程的runloop是开启的  </description>
+    </item>
+    
+    <item>
+      <title>Runloop</title>
+      <link>https://iosgua.com/interval/docs/ch07/tc03/7-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch07/tc03/7-1-3/</guid>
+      <description>题目还原 为什么只在主线程刷新UI  </description>
+    </item>
+    
+    <item>
+      <title>Runloop</title>
+      <link>https://iosgua.com/interval/docs/ch07/tc04/7-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch07/tc04/7-1-4/</guid>
+      <description>题目还原 PerformSelector和runloop的关系  </description>
+    </item>
+    
+    <item>
+      <title>Runloop</title>
+      <link>https://iosgua.com/interval/docs/ch07/tc05/7-1-5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch07/tc05/7-1-5/</guid>
+      <description>题目还原 如何使线程保活  </description>
+    </item>
+    
+    <item>
+      <title>Runtime 的内存模型</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-1/</guid>
+      <description>题目还原 介绍下 Runtime 的内存模型（isa、对象、类、metaclass、结构体的存储信息等）  </description>
+    </item>
+    
+    <item>
+      <title>UI 的刷新原理</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc01/4-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc01/4-1-3/</guid>
+      <description>题目还原 什么是离屏渲染？  </description>
+    </item>
+    
+    <item>
+      <title>UIView 和 CALayer</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc01/4-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc01/4-1-4/</guid>
+      <description>题目还原 UIView 和 CALayer 的区别是什么？  简单来说，UIView 是对 CALayer 的一个封装。CALayer 负责显示内容contents，UIView 为其提供内容，以及负责处理触摸等事件，参与响应链。
+参考链接: https://github.com/seedante/iOS-Note/wiki/Mastering-Offscreen-Render</description>
+    </item>
+    
+    <item>
+      <title>weak</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc02/6-2-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc02/6-2-1/</guid>
+      <description>题目还原 weak 是如何实现的？ SideTable 的结构是什么样的？  </description>
+    </item>
+    
+    <item>
+      <title>什么是离屏渲染</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc01/4-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc01/4-1-2/</guid>
+      <description>题目还原 什么是离屏渲染？   当图层属性的混合体被指定为在未预合成之前不能直接在屏幕中绘制时，离屏渲染就被唤起了。离屏渲染并不意味着软件绘制，但是它意味着图层必须在被显示之前在一个屏幕外上下文中被渲染(不论CPU还是GPU) 如果要在显示屏上显示内容，我们至少需要一块与屏幕像素数据量一样大的frame buffer，作为像素数据存储区域，而这也是GPU存储渲染结果的地方。如果有时因为面临一些限制，无法把渲染结果直接写入frame buffer，而是先暂存在另外的内存区域，之后再写入frame buffer，那么这个过程被称之为离屏渲染  参考链接   https://github.com/seedante/iOS-Note/wiki/Mastering-Offscreen-Render
+  推荐一本书 &amp;lt;iOS Core Animation - Advanced Techniques&amp;gt;
+  </description>
+    </item>
+    
+    <item>
+      <title>什么是离屏渲染</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc01/4-1-6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc01/4-1-6/</guid>
+      <description>题目还原 什么是离屏渲染？  </description>
+    </item>
+    
+    <item>
+      <title>关联对象</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc02/6-2-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc02/6-2-2/</guid>
+      <description>题目还原 关联对象是如何实现的，其内存管理如何进行  </description>
+    </item>
+    
+    <item>
+      <title>单例</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-4/</guid>
+      <description>题目还原 介绍下单例模式及其弊端  单例模式 单例模式，也叫单子模式，是一种常用的软件设计模式，属于创建型模式的一种。在应用这个模式时，单例对象的类必须保证只有一个实例存在。
+饿汉式单例类  优点 - 简单方便。 缺点 - 不管程序中是否使用到了单例对象，都会生成单例对象，并且由于静态对象是在类加载时就需要生成，会降低应用的启动速度。 适用场景 - 类对象功能简单，占用内存较小，频繁使用。 不适用 - 类对象功能复杂，占用内存大，适用概率较低  饱汉式单例类  优点 - 单例对象的生成是应用需要使用单例对象时采取构造，可以提高应用的启动速度。 缺点 - 不是线程安全的，如果多个线程同时调用getInstance方法，那么可能会生成多个单例对象。 适用场景 - 单例对象功能复杂，占用内存大，对应用的启动速度有要求。 不适用 - 多线程同时使用。  饿汉式单例类以及饱汉式单例类由于构造子是私有的，因此不可被继承，为了解决这个问题，出现了登记式单例类。
+参考链接: https://baijiahao.baidu.com/s?id=1642521443436643881&amp;amp;wfr=spider&amp;amp;for=pc</description>
+    </item>
+    
+    <item>
+      <title>卡顿</title>
+      <link>https://iosgua.com/interval/docs/ch10/tc01/10-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch10/tc01/10-1-2/</guid>
+      <description>题目还原 如何做卡顿优化，如何监控  </description>
+    </item>
+    
+    <item>
+      <title>同步</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc01/5-1-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc01/5-1-2/</guid>
+      <description>题目还原 iOS 中如何实现同步？  </description>
+    </item>
+    
+    <item>
+      <title>启动</title>
+      <link>https://iosgua.com/interval/docs/ch10/tc01/10-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch10/tc01/10-1-1/</guid>
+      <description>题目还原 如何做启动优化，如何监控  </description>
+    </item>
+    
+    <item>
+      <title>图片解码时机与优化</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc03/4-3-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc03/4-3-1/</guid>
+      <description>题目还原 图片是什么时候解码的？如何优化？  </description>
+    </item>
+    
+    <item>
+      <title>埋点</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-1/</guid>
+      <description>题目还原 手动埋点、自动化埋点、可视化埋点  </description>
+    </item>
+    
+    <item>
+      <title>多个相同的图片会重复加载吗？</title>
+      <link>https://iosgua.com/interval/docs/ch04/tc03/4-3-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch04/tc03/4-3-2/</guid>
+      <description>题目还原 多个相同的图片会重复加载吗？  </description>
+    </item>
+    
+    <item>
+      <title>属性修饰符 `atomic`</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc03/6-3-2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc03/6-3-2/</guid>
+      <description>题目还原 属性修饰符 atomic 的内部实现是怎么样的?能保证线程安全吗？  </description>
+    </item>
+    
+    <item>
+      <title>循环引用</title>
+      <link>https://iosgua.com/interval/docs/ch08/tc01/8-1-7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch08/tc01/8-1-7/</guid>
+      <description>题目还原 解决循环引用时为什么要用__strong、__weak修饰  </description>
+    </item>
+    
+    <item>
+      <title>方法调用</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-7/</guid>
+      <description>题目还原 在方法调用的时候，方法查询-&amp;gt; 动态解析-&amp;gt; 消息转发之前做了什么  </description>
+    </item>
+    
+    <item>
+      <title>死锁</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc01/5-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc01/5-1-4/</guid>
+      <description>题目还原 什么情况下会发生死锁？  </description>
+    </item>
+    
+    <item>
+      <title>消息转发</title>
+      <link>https://iosgua.com/interval/docs/ch06/tc01/6-1-6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch06/tc01/6-1-6/</guid>
+      <description>题目还原 什么是消息转发，消息转发机制和其他语言的消息机制优劣对比  </description>
+    </item>
+    
+    <item>
+      <title>稳定性</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-6/</guid>
+      <description>题目还原 如果保证项目的稳定性  </description>
+    </item>
+    
+    <item>
+      <title>线程</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc01/5-1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc01/5-1-1/</guid>
+      <description>题目还原 iOS 开发中有多少类型的线程？  </description>
+    </item>
+    
+    <item>
+      <title>线程池</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-9/</guid>
+      <description>题目还原 设计一个线程池，画出你的架构图  </description>
+    </item>
+    
+    <item>
+      <title>缓存</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-7/</guid>
+      <description>题目还原 设计一个图片缓存框架  </description>
+    </item>
+    
+    <item>
+      <title>网络</title>
+      <link>https://iosgua.com/interval/docs/ch10/tc01/10-1-4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch10/tc01/10-1-4/</guid>
+      <description>题目还原 如何做网络优化，如何监控  </description>
+    </item>
+    
+    <item>
+      <title>耗电</title>
+      <link>https://iosgua.com/interval/docs/ch10/tc01/10-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch10/tc01/10-1-3/</guid>
+      <description>题目还原 如何做耗电优化，如何监控  </description>
+    </item>
+    
+    <item>
+      <title>设计模式</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-3/</guid>
+      <description>题目还原 列举常见的设计模式  什么是设计模式? 设计模式是一套被反复使用的、多数人知晓的、经过分类编目的、代码设计经验的总结。使用设计模式是为了重用代码、让代码更容易被他人理解、保证代码可靠性。 毫无疑问，设计模式于己于他人于系统都是多赢的，设计模式使代码编制真正工程化，设计模式是软件工程的基石，如同大厦的一块块砖石一样。项目中合理地运用设计模式可以完美地解决很多问题，每种模式在现实中都有相应的原理来与之对应，每种模式都描述了一个在我们周围不断重复发生的问题，以及该问题的核心解决方案，这也是设计模式能被广泛应用的原因。
+什么是 GOF（四人帮，全拼 Gang of Four）？ 在 1994 年，由 Erich Gamma、Richard Helm、Ralph Johnson 和 John Vlissides 四人合著出版了一本名为 Design Patterns - Elements of Reusable Object-Oriented Software（中文译名：设计模式 - 可复用的面向对象软件元素） 的书，该书首次提到了软件开发中设计模式的概念。四位作者合称 GOF（四人帮，全拼 Gang of Four）。他们所提出的设计模式主要是基于以下的面向对象设计原则。
+ 对接口编程而不是对实现编程。 优先使用对象组合而不是继承。  设计原则 SOLID  单一职责 - 一个类应该只有一个发生变化的原因 开闭原则 - 一个软件实体应当对扩展开发，对修改关闭。 里氏代换原则 - 一个软件实体如果使用的是一个基类的话，那么一定适用于其子类，而且它根本不能察觉出基类对象和子类对象的区别。 接口隔离原则 - 使用多个专门的接口比使用单一的总接口要好。 依赖倒转原则 - 要依赖与抽象，不要依赖于具体。 迪米特法则 - 一个对象应当对其他对象有尽可能少的了解。 组合、聚合复用原则 - 要尽量使用合成/聚合，尽量不要使用继承。  设计模式类型 创建型 在软件工程中，创建型模式是处理对象创建的设计模式，试图根据实际情况使用合适的方式创建对象。基本的对象创建方式可能会导致设计上的问题，或增加设计的复杂度。创建型模式通过以某种方式控制对象的创建来解决问题。
+ 简单工厂 工厂 抽象工程 建造者 模板 单例  行为型 在软件工程中， 行为型模式为设计模式的一种类型，用来识别对象之间的常用交流模式并加以实现。如此，可在进行这些交流活动时增强弹性。</description>
+    </item>
+    
+    <item>
+      <title>路由</title>
+      <link>https://iosgua.com/interval/docs/ch09/tc01/9-1-5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch09/tc01/9-1-5/</guid>
+      <description>题目还原 常见的路由方案，以及优缺点对比  </description>
+    </item>
+    
+    <item>
+      <title>锁</title>
+      <link>https://iosgua.com/interval/docs/ch05/tc01/5-1-3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://iosgua.com/interval/docs/ch05/tc01/5-1-3/</guid>
+      <description>题目还原 有哪些类型的线程锁，分别介绍下作用和使用场景  </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="load &amp; initialize"><meta property="og:title" content="load &amp; initialize" />
+<meta property="og:description" content="词条作者：@0x1306a94
+ 题目还原 load、initialize方法的区别什么？在继承关系中他们有什么区别  load  Apple 官方文档介绍
+    每个Class、Category的 &#43;load，在程序运行过程中只调用一次(初始化Runtime时自动调用)    先调用Class的&#43;load,按照编译先后顺序调用(先编译，先调用,调用子类的&#43;load之前会先调用父类的&#43;load)    再调用Category的&#43;load, 按照编译先后顺序调用(先编译，先调用)    &#43;load方法是根据方法地址直接调用，并不是经过objc_msgSend函数调用     接下来通过源码来验证上面结论 本文基于 objc4-756.2.tar.gz 源码分析, 具体源码文件为 objc-runtime-new.mm
+  首先当你在手机上点击一个应用时,最终会由dyld将对应应用的可执行文件载入内存,然后进行一些初始化工作,其中会调用_objc_init, 这一流程可以通过添加一个_objc_init的符号断点,当断点断下时,可以通过lldb调试器输入bt查看详细的调用栈  void _objc_init(void) { static bool initialized = false; if (initialized) return; initialized = true; // fixme defer initialization until an objc-using image is found?  environ_init(); tls_init(); static_init(); lock_init(); exception_init(); // _objc_init-&gt;map_images-&gt;map_images_nolock-&gt;_read_images-&gt;realizeClass  _dyld_objc_notify_register(&amp;map_images, load_images, unmap_image); }  在_objc_init中注册dyld回调,接下来主要关注load_images回调函数, load_images函数所做的事刚好验证了上面说的第一点  void load_images(const char *path __unused, const struct mach_header *mh) { // 检查有没有load 需要调用  // 通过检查 mach-o 中 __objc_nlclslist 和 __objc_nlcatlist 段数据  if (!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iosgua.com/interval/docs/ch06/tc01/6-1-9/" />
+
+<title>load &amp; initialize | 一瓜 iOS 面试小册</title>
+<link rel="icon" href="/interval/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/interval/book.min.63f280e0ea25a89c51e2921595679425aa1c3e3011146f41e3436fc7635d7898.css" integrity="sha256-Y/KA4OolqJxR4pIVlWeUJaocPjARFG9B40Nvx2NdeJg=">
+
+
+<script defer src="/interval/en.search.min.f0cccae7026011e69755f218c2cfa1112991ee21224463ba569ef2af2a423837.js" integrity="sha256-8MzK5wJgEeaXVfIYws&#43;hESmR7iEiRGO6Vp7yrypCODc="></script>
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/interval"><span>一瓜 iOS 面试小册</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+  <ul>
+<li><a href="/interval/">序章</a></li>
+<li>第一章 基础知识
+<ul>
+<li><a href="/interval/docs/ch01/tc01/01/">1.1 计算机网络</a></li>
+<li><a href="/interval/docs/ch01/tc02/02/">1.2 操作系统</a></li>
+<li><a href="/interval/docs/ch01/tc03/03/">1.3 数据安全</a></li>
+<li><a href="/interval/docs/ch01/tc04/04/">1.4 苹果证书</a></li>
+</ul>
+</li>
+<li>第二章 数据结构与算法</li>
+<li>第三章 语法特性</li>
+<li>第四章 UIKit
+<ul>
+<li>4.1 基础
+<ul>
+<li><a href="/interval/docs/ch04/tc01/4-1-1/">什么是事件响应链</a></li>
+<li><a href="/interval/docs/ch04/tc01/4-1-2/">什么是离屏渲染</a></li>
+<li><a href="/interval/docs/ch04/tc01/4-1-3/">UI 的刷新原理</a></li>
+<li><a href="/interval/docs/ch04/tc01/4-1-4/"><code>UIView</code> 和 <code>CALayer</code></a></li>
+<li><a href="/interval/docs/ch04/tc01/4-1-5/"><code>layoutsubviews</code></a></li>
+</ul>
+</li>
+<li>4.2 布局方式
+<ul>
+<li><a href="/interval/docs/ch04/tc02/4-2-1/">AutoLayout 原理与性能</a></li>
+</ul>
+</li>
+<li>4.3 图片
+<ul>
+<li><a href="/interval/docs/ch04/tc03/4-3-1/">图片解码时机与优化</a></li>
+<li><a href="/interval/docs/ch04/tc03/4-3-1/">图片渲染优化</a></li>
+<li><a href="/interval/docs/ch04/tc03/4-3-2/">多个相同图片重复加载</a></li>
+<li><a href="/interval/docs/ch04/tc03/4-3-3/">imageName</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第五章 多线程
+<ul>
+<li>5.1 基础
+<ul>
+<li><a href="/interval/docs/ch05/tc01/5-1-1/">线程</a></li>
+<li><a href="/interval/docs/ch05/tc01/5-1-2/">同步</a></li>
+<li><a href="/interval/docs/ch05/tc01/5-1-3/">锁</a></li>
+<li><a href="/interval/docs/ch05/tc01/5-1-4/">死锁</a></li>
+</ul>
+</li>
+<li>5.2 GCD
+<ul>
+<li><a href="/interval/docs/ch05/tc02/5-2-1/">GCD 队列</a></li>
+<li><a href="/interval/docs/ch05/tc02/5-2-2/">GCD 线程与队列关系</a></li>
+<li><a href="/interval/docs/ch05/tc02/5-2-3/">GCD API</a></li>
+<li><a href="/interval/docs/ch05/tc02/5-2-4/"><code>dispatch_once</code> 实现原理</a></li>
+</ul>
+</li>
+<li>5.3 其他
+<ul>
+<li><a href="/interval/docs/ch05/tc03/5-3-1/"><code>NSOperationQueue</code></a></li>
+<li><a href="/interval/docs/ch05/tc03/5-3-2/"><code>NSTimer</code>, <code>CADisplayLink</code>, <code>dispatch_source_t</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第六章 Runtime
+<ul>
+<li>6.1 结构模型
+<ul>
+<li><a href="/interval/docs/ch06/tc01/6-1-1/">Runtime 的内存模型</a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-2/"><code>metaclass</code></a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-3/"><code>class_copyIvarList</code></a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-4/"><code>class_rw_t</code></a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-5/">Category</a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-6/">消息转发</a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-7/">方法调用</a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-8/"><code>IMP</code>, <code>SEL</code> 和 <code>Method</code></a></li>
+<li><a href="/interval/docs/ch06/tc01/6-1-9/"class=active><code>load</code>, <code>initialize</code></a></li>
+</ul>
+</li>
+<li>6.2 内存管理
+<ul>
+<li><a href="/interval/docs/ch06/tc02/6-2-1/"><code>weak</code> 弱引用</a></li>
+<li><a href="/interval/docs/ch06/tc02/6-2-2/">关联对象</a></li>
+<li><a href="/interval/docs/ch06/tc02/6-2-3/">Autoreleasepool</a></li>
+<li><a href="/interval/docs/ch06/tc02/6-2-4/">ARC 自动引用计数</a></li>
+</ul>
+</li>
+<li>6.3
+<ul>
+<li><a href="/interval/docs/ch06/tc03/6-3-1/">Method Swizzle</a></li>
+<li><a href="/interval/docs/ch06/tc03/6-3-2/">属性修饰符 <code>atomic</code></a></li>
+<li><a href="/interval/docs/ch06/tc03/6-3-3/">iOS 的内省方法</a></li>
+<li><a href="/interval/docs/ch06/tc03/6-3-4/"><code>objc_getClass</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第七章 RunLoop和KVO
+<ul>
+<li>7.1 RunLoop
+<ul>
+<li><a href="/interval/docs/ch07/tc01/7-1-1/">app如何接收到触摸事件的</a></li>
+<li><a href="/interval/docs/ch07/tc02/7-1-2/">为什么只有主线程的runloop是开启的</a></li>
+<li><a href="/interval/docs/ch07/tc03/7-1-3/">为什么只在主线程刷新UI</a></li>
+<li><a href="/interval/docs/ch07/tc04/7-1-4/">PerformSelector和runloop的关系</a></li>
+<li><a href="/interval/docs/ch07/tc05/7-1-5/">如何使线程保活</a></li>
+</ul>
+</li>
+<li><a href="/interval/docs/ch07/tc06/7-2-1/">7.2 KVO</a></li>
+</ul>
+</li>
+<li>第八章 Block
+<ul>
+<li><a href="/interval/docs/ch08/tc01/8-1-1/">block的内部实现，结构体是什么样的</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-2/">block是类吗，有哪些类型</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-3/">一个int变量被 __block 修饰与否的区别？block的变量截获</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-4/">block在修改NSMutableArray，需不需要添加__block</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-5/">block怎么进行内存管理的</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-6/">block可以用strong修饰吗</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-7/">解决循环引用时为什么要用__strong、__weak修饰</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-8/">block发生copy时机</a></li>
+<li><a href="/interval/docs/ch08/tc01/8-1-9/">Block访问对象类型的auto变量时，在ARC和MRC下有什么区别</a></li>
+</ul>
+</li>
+<li>第九章 工程架构
+<ul>
+<li>9.1 架构设计
+<ul>
+<li><a href="/interval/docs/ch09/tc01/9-1-1/">埋点</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-2/"><code>MVC</code>, <code>MVP</code>, <code>MVVM</code></a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-3/">设计模式</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-4/">单例</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-5/">路由</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-6/">稳定性</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-7/">缓存</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-8/"><code>git diff</code></a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-9/">线程池</a></li>
+<li><a href="/interval/docs/ch09/tc01/9-1-10/">APP 架构</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第十章 性能优化
+<ul>
+<li>10.1
+<ul>
+<li><a href="/interval/docs/ch10/tc01/10-1-1/">启动</a></li>
+<li><a href="/interval/docs/ch10/tc01/10-1-2/">卡顿</a></li>
+<li><a href="/interval/docs/ch10/tc01/10-1-3/">耗电</a></li>
+<li><a href="/interval/docs/ch10/tc01/10-1-4/">网络</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/interval/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>load &amp; initialize</strong>
+
+  <label for="toc-control">
+    <img src="/interval/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#load">load</a></li>
+            <li><a href="#initialize">initialize</a></li>
+            <li><a href="#loda方法与initialize方法的区别">loda方法与initialize方法的区别</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown">
+  <h1>load &amp; initialize</h1><blockquote>
+<p>词条作者：<a href="https://github.com/0x1306a94">@0x1306a94</a></p>
+</blockquote>
+<blockquote class="book-hint info">
+  <h3 id="题目还原">题目还原</h3>
+<p><strong><code>load</code>、<code>initialize</code>方法的区别什么？在继承关系中他们有什么区别</strong>
+</blockquote>
+
+<h3 id="load">load</h3>
+<blockquote>
+<p><a href="https://developer.apple.com/documentation/objectivec/nsobject/1418815-load?preferredLanguage=occ">Apple 官方文档介绍</a></p>
+</blockquote>
+<ul>
+<li>
+<ol>
+<li>每个<code>Class</code>、<code>Category</code>的 <code>+load</code>，在程序运行过程中只调用一次<code>(初始化Runtime时自动调用)</code></li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>先调用<code>Class</code>的<code>+load</code>,按照编译先后顺序调用<code>(先编译，先调用,调用子类的+load之前会先调用父类的+load)</code></li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>再调用<code>Category</code>的<code>+load</code>, 按照编译先后顺序调用<code>(先编译，先调用)</code></li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li><code>+load</code>方法是根据方法地址直接调用，并不是经过<code>objc_msgSend</code>函数调用</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>接下来通过源码来验证上面结论
+本文基于 <code>objc4-756.2.tar.gz</code> 源码分析, 具体源码文件为 <code>objc-runtime-new.mm</code></p>
+</blockquote>
+<ul>
+<li>首先当你在手机上点击一个应用时,最终会由<code>dyld</code>将对应应用的可执行文件载入内存,然后进行一些初始化工作,其中会调用<code>_objc_init</code>, 这一流程可以通过添加一个<code>_objc_init</code>的符号断点,当断点断下时,可以通过<code>lldb</code>调试器输入<code>bt</code>查看详细的调用栈</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">_objc_init</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> initialized <span style="color:#f92672">=</span> false;
+    <span style="color:#66d9ef">if</span> (initialized) <span style="color:#66d9ef">return</span>;
+    initialized <span style="color:#f92672">=</span> true;
+    
+    <span style="color:#75715e">// fixme defer initialization until an objc-using image is found?
+</span><span style="color:#75715e"></span>    environ_init();
+    tls_init();
+    static_init();
+    lock_init();
+    exception_init();
+    
+    <span style="color:#75715e">// _objc_init-&gt;map_images-&gt;map_images_nolock-&gt;_read_images-&gt;realizeClass
+</span><span style="color:#75715e"></span>    _dyld_objc_notify_register(<span style="color:#f92672">&amp;</span>map_images, load_images, unmap_image);
+}
+</code></pre></div><ul>
+<li>在<code>_objc_init</code>中注册<code>dyld</code>回调,接下来主要关注<code>load_images</code>回调函数, <code>load_images</code>函数所做的事刚好验证了上面说的第一点</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">load_images</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>path __unused, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> mach_header <span style="color:#f92672">*</span>mh)
+{
+    <span style="color:#75715e">// 检查有没有load 需要调用
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 通过检查 mach-o 中 __objc_nlclslist 和 __objc_nlcatlist 段数据
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>hasLoadMethods((<span style="color:#66d9ef">const</span> headerType <span style="color:#f92672">*</span>)mh)) <span style="color:#66d9ef">return</span>;
+
+    recursive_mutex_locker_t lock(loadMethodLock);
+
+    <span style="color:#75715e">// 准备所有load
+</span><span style="color:#75715e"></span>    {
+        mutex_locker_t lock2(runtimeLock);
+        prepare_load_methods((<span style="color:#66d9ef">const</span> headerType <span style="color:#f92672">*</span>)mh);
+    }
+
+    <span style="color:#75715e">// 调用所有load
+</span><span style="color:#75715e"></span>    call_load_methods();
+}
+</code></pre></div><ul>
+<li>准备好所有<code>load</code>方法,先查找所有<code>Class</code>的<code>load</code>,然后是<code>Category</code>的<code>load</code> 这一步由<code>prepare_load_methods</code>函数完成</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prepare_load_methods</span>(<span style="color:#66d9ef">const</span> headerType <span style="color:#f92672">*</span>mhdr)
+{
+    size_t count, i;
+
+    runtimeLock.assertLocked();
+    <span style="color:#75715e">// 从 mach-o __objc_nlclslist 段中取出 所有 classref_t 数据
+</span><span style="color:#75715e"></span>    classref_t <span style="color:#f92672">*</span>classlist <span style="color:#f92672">=</span> 
+        _getObjc2NonlazyClassList(mhdr, <span style="color:#f92672">&amp;</span>count);
+    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> count; i<span style="color:#f92672">++</span>) {
+        schedule_class_load(remapClass(classlist[i]));
+    }
+
+    <span style="color:#75715e">// 从 mach-o __objc_nlcatlist 段中取出 所有 category_t 数据
+</span><span style="color:#75715e"></span>    category_t <span style="color:#f92672">**</span>categorylist <span style="color:#f92672">=</span> _getObjc2NonlazyCategoryList(mhdr, <span style="color:#f92672">&amp;</span>count);
+    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> count; i<span style="color:#f92672">++</span>) {
+        category_t <span style="color:#f92672">*</span>cat <span style="color:#f92672">=</span> categorylist[i];
+        Class cls <span style="color:#f92672">=</span> remapClass(cat<span style="color:#f92672">-&gt;</span>cls);
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cls) <span style="color:#66d9ef">continue</span>;  <span style="color:#75715e">// category for ignored weak-linked class
+</span><span style="color:#75715e"></span>        realizeClass(cls);
+        assert(cls<span style="color:#f92672">-&gt;</span>ISA()<span style="color:#f92672">-&gt;</span>isRealized());
+        add_category_to_loadable_list(cat);
+    }
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">schedule_class_load</span>(Class cls)
+{
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cls) <span style="color:#66d9ef">return</span>;
+    assert(cls<span style="color:#f92672">-&gt;</span>isRealized());  <span style="color:#75715e">// _read_images should realize
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">if</span> (cls<span style="color:#f92672">-&gt;</span>data()<span style="color:#f92672">-&gt;</span>flags <span style="color:#f92672">&amp;</span> RW_LOADED) <span style="color:#66d9ef">return</span>;
+
+    <span style="color:#75715e">// 首先处理了传入的cls 的superclas
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 这一步验证了 上面所说第二点 (调用子类的+load之前会先调用父类的+load)
+</span><span style="color:#75715e"></span>    schedule_class_load(cls<span style="color:#f92672">-&gt;</span>superclass);
+    
+    add_class_to_loadable_list(cls);
+    cls<span style="color:#f92672">-&gt;</span>setInfo(RW_LOADED); 
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/***********************************************************************
+</span><span style="color:#75715e">* add_class_to_loadable_list
+</span><span style="color:#75715e">* Class cls has just become connected. Schedule it for +load if
+</span><span style="color:#75715e">* it implements a +load method.
+</span><span style="color:#75715e">**********************************************************************/</span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">add_class_to_loadable_list</span>(Class cls)
+{
+    IMP method;
+
+    loadMethodLock.assertLocked();
+    <span style="color:#75715e">// 通过遍历 class_ro_t 中的 baseMethodList
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 判断其每一个 method_t 中的 name 是否和 &#34;load&#34; 相等
+</span><span style="color:#75715e"></span>    method <span style="color:#f92672">=</span> cls<span style="color:#f92672">-&gt;</span>getLoadMethod();
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>method) <span style="color:#66d9ef">return</span>;  <span style="color:#75715e">// Don&#39;t bother if cls has no +load method
+</span><span style="color:#75715e"></span>    
+    <span style="color:#66d9ef">if</span> (PrintLoading) {
+        _objc_inform(<span style="color:#e6db74">&#34;LOAD: class &#39;%s&#39; scheduled for +load&#34;</span>, 
+                     cls<span style="color:#f92672">-&gt;</span>nameForLogging());
+    }
+    
+    <span style="color:#66d9ef">if</span> (loadable_classes_used <span style="color:#f92672">==</span> loadable_classes_allocated) {
+        loadable_classes_allocated <span style="color:#f92672">=</span> loadable_classes_allocated<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
+        loadable_classes <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> loadable_class <span style="color:#f92672">*</span>)
+            realloc(loadable_classes,
+                              loadable_classes_allocated <span style="color:#f92672">*</span>
+                              <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> loadable_class));
+    }
+    <span style="color:#75715e">// 如果cls 有实现 +load 则添加到 loadable_classes 变量中
+</span><span style="color:#75715e"></span>    loadable_classes[loadable_classes_used].cls <span style="color:#f92672">=</span> cls;
+    loadable_classes[loadable_classes_used].method <span style="color:#f92672">=</span> method;
+    loadable_classes_used<span style="color:#f92672">++</span>;
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/***********************************************************************
+</span><span style="color:#75715e">* add_category_to_loadable_list
+</span><span style="color:#75715e">* Category cat&#39;s parent class exists and the category has been attached
+</span><span style="color:#75715e">* to its class. Schedule this category for +load after its parent class
+</span><span style="color:#75715e">* becomes connected and has its own +load method called.
+</span><span style="color:#75715e">**********************************************************************/</span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">add_category_to_loadable_list</span>(Category cat)
+{
+    IMP method;
+
+    loadMethodLock.assertLocked();
+    <span style="color:#75715e">// 通过遍历 Category 中的 classMethods 
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 判断其每一个 method_t 中的 name 是否和 &#34;load&#34; 相等
+</span><span style="color:#75715e"></span>    method <span style="color:#f92672">=</span> _category_getLoadMethod(cat);
+
+    <span style="color:#75715e">// Don&#39;t bother if cat has no +load method
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>method) <span style="color:#66d9ef">return</span>;
+
+    <span style="color:#66d9ef">if</span> (PrintLoading) {
+        _objc_inform(<span style="color:#e6db74">&#34;LOAD: category &#39;%s(%s)&#39; scheduled for +load&#34;</span>, 
+                     _category_getClassName(cat), _category_getName(cat));
+    }
+    
+    <span style="color:#66d9ef">if</span> (loadable_categories_used <span style="color:#f92672">==</span> loadable_categories_allocated) {
+        loadable_categories_allocated <span style="color:#f92672">=</span> loadable_categories_allocated<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
+        loadable_categories <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> loadable_category <span style="color:#f92672">*</span>)
+            realloc(loadable_categories,
+                              loadable_categories_allocated <span style="color:#f92672">*</span>
+                              <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> loadable_category));
+    }
+
+    <span style="color:#75715e">// 如果 Category 有实现 +load 则添加到 loadable_categories 变量中
+</span><span style="color:#75715e"></span>    loadable_categories[loadable_categories_used].cat <span style="color:#f92672">=</span> cat;
+    loadable_categories[loadable_categories_used].method <span style="color:#f92672">=</span> method;
+    loadable_categories_used<span style="color:#f92672">++</span>;
+}
+</code></pre></div><ul>
+<li>调用<code>+load</code></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">call_load_methods</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> loading <span style="color:#f92672">=</span> NO;
+    <span style="color:#66d9ef">bool</span> more_categories;
+
+    loadMethodLock.assertLocked();
+
+    <span style="color:#75715e">// Re-entrant calls do nothing; the outermost call will finish the job.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (loading) <span style="color:#66d9ef">return</span>;
+    loading <span style="color:#f92672">=</span> YES;
+
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pool <span style="color:#f92672">=</span> objc_autoreleasePoolPush();
+
+    <span style="color:#66d9ef">do</span> {
+        <span style="color:#75715e">// 1. 调用Class 的 +load
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> (loadable_classes_used <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+            call_class_loads();
+        }
+
+        <span style="color:#75715e">// 2. 调用 Category 的 +load
+</span><span style="color:#75715e"></span>        more_categories <span style="color:#f92672">=</span> call_category_loads();
+
+    } <span style="color:#66d9ef">while</span> (loadable_classes_used <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>  <span style="color:#f92672">||</span>  more_categories);
+
+    objc_autoreleasePoolPop(pool);
+
+    loading <span style="color:#f92672">=</span> NO;
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// 调用 Class +load
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">call_class_loads</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#66d9ef">int</span> i;
+    
+    <span style="color:#75715e">// Detach current loadable list.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> loadable_class <span style="color:#f92672">*</span>classes <span style="color:#f92672">=</span> loadable_classes;
+    <span style="color:#66d9ef">int</span> used <span style="color:#f92672">=</span> loadable_classes_used;
+    loadable_classes <span style="color:#f92672">=</span> nil;
+    loadable_classes_allocated <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    loadable_classes_used <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    
+    <span style="color:#75715e">// Call all +loads for the detached list.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> used; i<span style="color:#f92672">++</span>) {
+        Class cls <span style="color:#f92672">=</span> classes[i].cls;
+        load_method_t load_method <span style="color:#f92672">=</span> (load_method_t)classes[i].method;
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cls) <span style="color:#66d9ef">continue</span>; 
+
+        <span style="color:#66d9ef">if</span> (PrintLoading) {
+            _objc_inform(<span style="color:#e6db74">&#34;LOAD: +[%s load]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cls<span style="color:#f92672">-&gt;</span>nameForLogging());
+        }
+        <span style="color:#75715e">// 直接调用, 不通过 objc_msgSend 调用
+</span><span style="color:#75715e"></span>        (<span style="color:#f92672">*</span>load_method)(cls, SEL_load);
+    }
+    
+    <span style="color:#75715e">// Destroy the detached list.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (classes) free(classes);
+}
+
+<span style="color:#75715e">// 调用 Category +load
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">call_category_loads</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#66d9ef">int</span> i, shift;
+    <span style="color:#66d9ef">bool</span> new_categories_added <span style="color:#f92672">=</span> NO;
+    
+    <span style="color:#75715e">// Detach current loadable list.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> loadable_category <span style="color:#f92672">*</span>cats <span style="color:#f92672">=</span> loadable_categories;
+    <span style="color:#66d9ef">int</span> used <span style="color:#f92672">=</span> loadable_categories_used;
+    <span style="color:#66d9ef">int</span> allocated <span style="color:#f92672">=</span> loadable_categories_allocated;
+    loadable_categories <span style="color:#f92672">=</span> nil;
+    loadable_categories_allocated <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    loadable_categories_used <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+    <span style="color:#75715e">// Call all +loads for the detached list.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> used; i<span style="color:#f92672">++</span>) {
+        Category cat <span style="color:#f92672">=</span> cats[i].cat;
+        load_method_t load_method <span style="color:#f92672">=</span> (load_method_t)cats[i].method;
+        Class cls;
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cat) <span style="color:#66d9ef">continue</span>;
+
+        cls <span style="color:#f92672">=</span> _category_getClass(cat);
+        <span style="color:#66d9ef">if</span> (cls  <span style="color:#f92672">&amp;&amp;</span>  cls<span style="color:#f92672">-&gt;</span>isLoadable()) {
+            <span style="color:#66d9ef">if</span> (PrintLoading) {
+                _objc_inform(<span style="color:#e6db74">&#34;LOAD: +[%s(%s) load]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, 
+                             cls<span style="color:#f92672">-&gt;</span>nameForLogging(), 
+                             _category_getName(cat));
+            }
+            <span style="color:#75715e">// 直接调用, 不通过 objc_msgSend 调用
+</span><span style="color:#75715e"></span>            (<span style="color:#f92672">*</span>load_method)(cls, SEL_load);
+            cats[i].cat <span style="color:#f92672">=</span> nil;
+        }
+    }
+
+    ......
+    <span style="color:#66d9ef">return</span> new_categories_added;
+}
+</code></pre></div><h3 id="initialize">initialize</h3>
+<blockquote>
+<p><a href="https://developer.apple.com/reference/objectivec/nsobject/1418639-initialize?language=objc">Apple 官方文档介绍</a></p>
+</blockquote>
+<ul>
+<li>
+<ol>
+<li><code>+initialize</code>方法会在类第一次接收到消息时调用</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>先调用<code>父类的+initialize</code>，再调用<code>子类的+initialize</code> (先初始化父类，再初始化子类，每个类只会初始化1次)</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>源码分析</p>
+</blockquote>
+<ul>
+<li>我们都知道 <code>OC</code> 中的方法调用最终都会转化为 <code>objc_msgSend</code> 调用, 在<code>objc_msgSend</code>的执行过程中会来到<code>lookUpImpOrForward</code>函数中,而<code>+initialize</code>的调用就是在<code>lookUpImpOrForward</code>函数中触发</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">IMP <span style="color:#a6e22e">lookUpImpOrForward</span>(Class cls, SEL sel, id inst, 
+                       <span style="color:#66d9ef">bool</span> initialize, <span style="color:#66d9ef">bool</span> cache, <span style="color:#66d9ef">bool</span> resolver)
+{
+    ....
+    
+    <span style="color:#75715e">// 检查 cls 是否已经执行过 +initialize
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (initialize  <span style="color:#f92672">&amp;&amp;</span>  <span style="color:#f92672">!</span>cls<span style="color:#f92672">-&gt;</span>isInitialized()) {
+        runtimeLock.unlock();
+        <span style="color:#75715e">// 如果没有则执行 +initialize
+</span><span style="color:#75715e"></span>        _class_initialize (_class_getNonMetaClass(cls, inst));
+        runtimeLock.lock();
+    }
+
+    .....
+
+    <span style="color:#66d9ef">return</span> imp;
+}
+
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">_class_initialize</span>(Class cls)
+{
+    
+    <span style="color:#75715e">// 如果父类还没有执行过,则先执行 父类的
+</span><span style="color:#75715e"></span>    supercls <span style="color:#f92672">=</span> cls<span style="color:#f92672">-&gt;</span>superclass;
+    <span style="color:#66d9ef">if</span> (supercls  <span style="color:#f92672">&amp;&amp;</span>  <span style="color:#f92672">!</span>supercls<span style="color:#f92672">-&gt;</span>isInitialized()) {
+        _class_initialize(supercls);
+    }
+    
+    callInitialize(cls);
+
+    .....
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">callInitialize</span>(Class cls)
+{   
+    <span style="color:#75715e">// 调用 +initialize
+</span><span style="color:#75715e"></span>    ((<span style="color:#66d9ef">void</span>(<span style="color:#f92672">*</span>)(Class, SEL))objc_msgSend)(cls, SEL_initialize);
+    <span style="color:#66d9ef">asm</span>(<span style="color:#e6db74">&#34;&#34;</span>);
+}
+</code></pre></div><h3 id="loda方法与initialize方法的区别">loda方法与initialize方法的区别</h3>
+<ul>
+<li><code>+initialize</code>和<code>+load</code>的很大区别是，<code>+initialize</code>是通过<code>objc_msgSend</code>进行调用的，所以有以下特点
+<ul>
+<li>如果<code>子类没有实现+initialize</code>，会调用<code>父类的+initialize</code></li>
+<li>如果<code>分类实现了+initialize</code>，就<code>覆盖类本身的+initialize调用</code></li>
+</ul>
+</li>
+<li><code>+load</code>是直接通过函数地址进行调用,并不通过<code>objc_msgSend</code>调用</li>
+<li>手动调用<code>+load</code>最终会转化为<code>objc_msgSend</code>调用</li>
+<li>如果类和分类没有实现<code>+load</code>,则不会调用</li>
+</ul>
+
+    <div>
+      <a class="flex align-center" href="https://github.com/idevqa/interval-content//edit/master//docs/ch06/tc01/6-1-9.md" target="_blank" rel="noopener">
+        <img src="/interval/svg/edit.svg" class="book-icon" alt="Edit" />
+        <span>Edit this page</span>
+      </a>
+    </div>
+  
+  <hr/>
+  <img src="https://raw.githubusercontent.com/Desgard/algo/img/img/_index/wechat-qrcode.png" style="max-width: 100%;"/>
+  <p>本作品采用 <strong><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.zh-Hans">知识署名-非商业性使用-禁止演绎 （BY-NC-ND） 4.0 国际许可协议</a></strong> 进行许可。</p>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#load">load</a></li>
+            <li><a href="#initialize">initialize</a></li>
+            <li><a href="#loda方法与initialize方法的区别">loda方法与initialize方法的区别</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
